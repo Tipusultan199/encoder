@@ -10,6 +10,31 @@ One-hot encoding is a technique where categorical variables are transformed into
 Each category becomes a separate binary feature, and only one feature is 1 (hot) while the others are 0 (cold).
 One-hot encoding is useful for nominal variables without any inherent order.
 Example: Encoding the categories "red", "green", "blue" as [1, 0, 0], [0, 1, 0], [0, 0, 1].
+
+*** The dummy variable trap refers to the issue of multicollinearity that arises when using one-hot encoding. It occurs when one or more variables can be predicted perfectly from the others. In the case of one-hot encoding, the trap happens when one category can be inferred from the remaining categories.
+
+To handle the dummy variable trap, you need to drop one of the encoded columns for each categorical feature. This ensures that the remaining columns are linearly independent and avoids multicollinearity in your model.
+
+import pandas as pd
+
+# Load the dataset
+df = pd.read_csv('dataset.csv')
+
+# Categorical column to encode
+column_to_encode = 'color'
+
+# Perform one-hot encoding
+encoded_columns = pd.get_dummies(df[column_to_encode], prefix=column_to_encode, drop_first=True)
+
+# Drop the original categorical column
+df.drop(column_to_encode, axis=1, inplace=True)
+
+# Concatenate the encoded columns with the original dataset
+df = pd.concat([df, encoded_columns], axis=1)
+
+# Print the modified dataset
+print(df)
+
 Ordinal Encoder:
 
 Ordinal encoding is used for encoding ordinal categorical variables.
